@@ -160,7 +160,10 @@ function PDFViewer() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    // const materialId = "3da3c70b-5120-433a-8edc-cf29dfde09a1"; // Hardcoded material ID
+
     const materialId = "3da3c70b-5120-433a-8edc-cf29dfde09a1"; // Hardcoded material ID
+
     dispatch(fetchPdfRequest(materialId))
       .then((response) => {
         console.log("Fetched PDF file path:", response);
@@ -174,14 +177,14 @@ function PDFViewer() {
 
   useEffect(() => {
     if (pdf && pdf.length > 0) {
-      setViewPdf(pdf[1].filePath); // Automatically select the first PDF in the array
+      setViewPdf(pdf[0].filePath); // Automatically select the first PDF in the array
     }
   }, [pdf]);
 
   useEffect(() => {
     if (fileResponse.length > 0) {
-      console.log("filepath", fileResponse[1].filePath); // Log file path
-      const url = `${fileResponse[1].filePath}`; // Construct the URL
+      console.log("filepath", fileResponse[0].filePath); // Log file path
+      const url = `${fileResponse[0].filePath}`; // Construct the URL
       console.log("fileurl", url);
       setViewPdf(url); // Set the viewpdf state with the URL
     }

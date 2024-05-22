@@ -2,7 +2,8 @@ import { FETCH_PDF_REQUEST,fetchPdfSuccess,fetchPdfFailure } from "../actions/Fe
 import axios from "axios";
 
 const fetchPdfApi=({dispatch})=>(next)=>async(action)=>{
-    const topicId = "65d5b802-afc2-49fa-ab17-0295d91c01a5"; // Hardcoded topic ID
+    // const topicId = "65d5b802-afc2-49fa-ab17-0295d91c01a5"; // Hardcoded topic ID
+    const topicId = "2ee9c6d2-c3a1-4c05-97dc-60203ab8a8c0"; // Hardcoded topic ID
     if(action.type===FETCH_PDF_REQUEST){
         try{
         const response=await axios.get(`http://localhost:5199/lxp/course/topic/${topicId}/materialtype/${action.payload}`);

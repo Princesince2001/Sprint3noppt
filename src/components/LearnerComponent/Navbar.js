@@ -1,58 +1,108 @@
-import React, { useState } from 'react';
-// import Avatar from '@mui/material/Avatar';
+import React, { useState, useEffect } from 'react';
 import Relevantz from '../../assets/Images/Relevantz.png';
-// import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import '../../Styles/Navbar.css'; // Adjust the path as needed
-import Course from './Course'; 
+import '../../Styles/Navbar.css';
+import Course from './Course';
+import { fetchCourses } from '../../middleware/CourseApi';
  
 function Navbar() {
   const [search, setSearch] = useState(""); // State for search query
+  const [courses, setCourses] = useState([]); // State for all courses
+  const [suggestions, setSuggestions] = useState([]); // State for filtered suggestions
+ 
+  useEffect(() => {
+    // Fetch courses once when the component mounts
+    const fetchData = async () => {
+      const coursesData = await fetchCourses();
+      if (coursesData) {
+        setCourses(coursesData);
+      }
+    };
+    fetchData();
+  }, []);
+ 
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
+    setSearch(query);
+    if (query.length > 0) {
+      const filteredSuggestions = courses.filter(course =>
+        course.title.toLowerCase().includes(query.toLowerCase())
+      );
+      setSuggestions(filteredSuggestions);
+    } else {
+      setSuggestions([]);
+    }
+  };
+ 
+  const handleSuggestionClick = (suggestion) => {
+    setSearch(suggestion.title);
+    setSuggestions([]);
+  };
  
   return (
     <div>
-      <nav className="navbar navbar-expand-sm navbar-dark ">
+      <nav className="navbar navbar-expand-sm navbar-dark">
         <div className="container-fluid">
-          <a className="navbar-brand" href="javascript:void(0)"><img src={Relevantz} alt="Relevantz Logo" /></a>
+          <a className="navbar-brand" href="#"><img src={Relevantz} alt="Relevantz Logo" /></a>
           <div><h5>Learning Management System</h5></div>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
             <span className="navbar-toggler-icon"></span>
           </button>
-          {/* Search bar component */}
           <div className="collapse navbar-collapse" id="mynavbar">
-            <form className="d-flex">
-              <div className="input-group search-bar" style={{width:300}}>
+            <form className="d-flex position-relative">
+              <div className="input-group search-bar" style={{ width: 400 }}>
                 <input
-                  className="form-control "
+                  className="form-control"
                   type="text"
                   placeholder="Search"
                   value={search}
-                  onChange={(e) => setSearch(e.target.value)} // Update search state
+                  onChange={handleSearchChange}
                 />
                 <button className="btn btn-light" type="button">
                   <i className="bi bi-search"></i>
                 </button>
               </div>
+              {suggestions.length > 0 && (
+                <ul className="suggestions-dropdown">
+                  {suggestions.map((suggestion) => (
+                    <li
+                      key={suggestion.courseId}
+                      onClick={() => handleSuggestionClick(suggestion)}
+                    >
+                      {suggestion.title}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </form>
           </div>
           <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <a className="nav-link icon" href="javascript:void(0)">Home</a>
+              <a className="nav-link icon" href="#">Home</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link icon" href="javascript:void(0)">Course</a>
+              <a className="nav-link icon" href="#">Course</a>
             </li>
           </ul>
           <div className="user-profile">
-            <span>Priya</span>
+          {/* 
+          <img src="https://www.rawpixel.com/image/12803109/png-flower-drawing-sketch-plant-generated-image-rawpixel#eyJrZXlzIjoicG5nIiwic29ydGVkS2V5cyI6InBuZyJ9" alt="Avatar" class="avatar"/> */}
+       <div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+    Dropdown button
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+    <li><a class="dropdown-item" href="#">Action</a></li>
+    <li><a class="dropdown-item" href="#">Another action</a></li>
+    <li><a class="dropdown-item" href="#">Something else here</a></li>
+  </ul>
+</div>
+          
           </div>
         </div>
       </nav>
-      {/* Pass the search state to Course component */}
       <Course search={search} />
- 
- 
     </div>
   );
 }
  
-export default Navbar;
+export default Navbar; 

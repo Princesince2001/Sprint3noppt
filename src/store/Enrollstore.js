@@ -2,9 +2,9 @@
 import { createStore, applyMiddleware } from 'redux';
 
 import { enrollMiddleware } from '../middleware/EnrollApi';
-import {EnrollmentReducer} from '../reducers/EnrollmentReducer'
+import {enrollReducer} from '../reducers/Enrollreducer'
 
 
 
 
-export const store = createStore( applyMiddleware(enrollMiddleware));
+export const store = createStore( enrollReducer, applyMiddleware(enrollMiddleware));
